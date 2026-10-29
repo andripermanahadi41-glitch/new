@@ -1,0 +1,6 @@
+{
+  "name": "GP180 Tone Builder",
+  "description": "Editor and AI Tone Preset Generator for Valeton GP-180 multi-effects pedal with signal chain modeling and preset export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

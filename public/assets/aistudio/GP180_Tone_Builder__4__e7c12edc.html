@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GP180 Tone Builder</title>
+<style>
+:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#0a0a0b;--card:#17181b;--card2:#232529;--tx:#eceae6;--mut:#8d8f96;--ac:#ff8a5c;--ln:#34363c}
+
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Roboto,sans-serif;max-width:560px;margin:0 auto;min-height:100vh;padding-bottom:70px}
+header{display:flex;align-items:center;gap:10px;padding:14px 16px}
+header h1{font-size:16px;margin:0;flex:1;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.ico{width:36px;height:36px;border-radius:50%;background:var(--card);display:grid;place-items:center}
+.chain{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:0 12px 12px}
+.mod{background:var(--card);border:2px solid transparent;border-radius:12px;padding:10px 0 6px;text-align:center;font-size:11px;color:var(--mut);position:relative}
+.mod b{display:block;font-size:15px;margin-bottom:2px}
+.mod.on b{color:var(--c)}.mod.on{background:var(--card2)}
+.mod.sel{border-color:var(--ac)}
+.mod i{position:absolute;top:4px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--ln)}
+.mod.on i{background:var(--c)}
+.panel{margin:0 12px;background:var(--card);border-radius:12px;padding:9px 10px}
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.ph h2{margin:0;font-size:14px}
+.sw{background:var(--card2);padding:4px 10px;border-radius:16px;font-size:11px}
+.sel2{display:flex;align-items:center;gap:6px;background:var(--card2);border-radius:16px;padding:2px 8px;font-size:11px}
+.knobs{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:6px 2px}
+.k{text-align:center;touch-action:none;user-select:none;font-size:9px;color:var(--mut);letter-spacing:.3px}
+.k svg{width:42px;height:42px}
+.k .v{color:var(--ac);font-weight:600;font-size:10px}
+.row{display:flex;gap:8px;margin:8px 12px 0}
+.btn{flex:1;background:var(--ac);color:#1b1109;padding:8px;border-radius:10px;font-weight:600;font-size:13px}
+.btn.g{background:var(--card);color:var(--tx)}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;background:var(--card);display:flex;border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;padding:10px 0;font-size:12px;color:var(--mut)}nav button.a{color:var(--ac)}
+.list{margin:12px;display:grid;gap:8px}
+.item{background:var(--card);border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center}
+.item small{color:var(--mut);display:block}
+.ov{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:20px;z-index:5}
+.ov.s{display:flex}
+.dlg{background:var(--card);border-radius:18px;padding:20px;width:100%;max-width:400px}
+.dlg h3{margin:0 0 8px}.dlg p{font-size:13px;color:var(--mut);margin:0 0 14px}
+input,textarea{width:100%;background:var(--card2);border:1px solid var(--ln);color:var(--tx);border-radius:10px;padding:11px;font:inherit;margin-bottom:10px}
+.ar{display:flex;justify-content:flex-end;gap:10px;align-items:center}
+#msg{font-size:12px;color:var(--mut);margin:0 12px;min-height:16px;padding-top:8px}
+.chip{background:var(--card2);padding:6px 12px;border-radius:16px;font-size:12px;color:var(--tx);text-decoration:none}
+select{width:100%;background:var(--card2);border:1px solid var(--ln);color:var(--tx);border-radius:10px;padding:10px;font:inherit}
+.dlg label{display:block;font-size:12px;color:var(--mut);margin:0 0 4px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kf{display:flex;gap:8px;align-items:center;margin-bottom:10px}.kf input{margin:0;flex:1}
+.ck{display:flex!important;gap:8px;align-items:flex-start;color:var(--tx)!important;font-size:13px!important;margin-bottom:10px!important}#kk{width:auto;margin:3px 0 0}
+.dlg ol{padding-left:18px;margin:0 0 12px;font-size:13px}.dlg ol li{margin-bottom:4px}
+.nt{font-size:12px;color:var(--mut);margin:0 0 12px}
+button.chip{border:1px solid var(--ln);cursor:pointer}
+.exs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;white-space:nowrap}.exs .chip{flex:none;font-size:11px;padding:5px 10px}
+#gen input{font-size:13px;padding:8px;margin-bottom:6px}
+#dd{display:none;position:absolute;right:10px;top:46px;z-index:6;width:min(270px,86%);max-height:46vh;overflow:auto;background:var(--card2);border:1px solid var(--ln);border-radius:12px;box-shadow:0 10px 28px #000a;padding:4px}
+#dd button{display:block;width:100%;text-align:left;padding:10px 12px;border-radius:8px;font-size:14px}
+#dd button.cur{background:var(--card);color:var(--ac);font-weight:600}
+</style></head><body>
+<header><div class="ico">☰</div><h1 id="pn">Solo Tone - GP180</h1><button class="chip" id="bt" onclick="btc()" style="font-size:11px;padding:7px 10px;white-space:nowrap;color:var(--mut)">○ Bluetooth</button><button class="chip" id="usb" onclick="usbc()" style="font-size:11px;padding:7px 10px;white-space:nowrap;color:var(--mut)">○ USB</button><button class="ico" onclick="openKey()" title="Gemini API Key">⚙</button></header>
+<div id="v1">
+<div class="panel" id="gen" style="margin-bottom:10px"><h2 style="margin:0 0 2px;font-size:14px">Cari preset lagu</h2><div class="nt" style="margin-bottom:6px">Isi nama band dan judul lagu, pilih gitar atau bass. AI akan menyusun preset GP180.</div>
+<div class="ar" style="justify-content:flex-start;gap:6px;margin-bottom:8px"><span style="font-size:11px;color:var(--mut)">Preset untuk:</span><button class="sw" id="ig" onclick="setI('gitar')">Gitar</button><button class="sw" id="ib" onclick="setI('bass')">Bass</button></div>
+<div class="g2"><input id="ab" oninput="lnk()" placeholder="Nama band / artis" autocomplete="off"><input id="at" oninput="lnk()" placeholder="Judul lagu" autocomplete="off"></div>
+<input id="al" placeholder="Tautan YouTube / Spotify / SoundCloud (opsional)" autocomplete="off">
+<div class="exs"><button class="chip" data-v="Metallica|Master of Puppets" onclick="ex(this)">Metallica - Master of Puppets</button><button class="chip" data-v="Pink Floyd|Comfortably Numb" onclick="ex(this)">Pink Floyd - Comfortably Numb</button><button class="chip" data-v="Red Hot Chili Peppers|Under the Bridge" onclick="ex(this)">RHCP - Under the Bridge</button><button class="chip" data-v="Queen|Another One Bites the Dust" onclick="ex(this)">Queen - Another One Bites the Dust</button></div>
+<div class="ar" style="justify-content:flex-start;gap:6px;flex-wrap:wrap;margin:6px 0 8px"><span style="font-size:11px;color:var(--mut)">Cari lagu di:</span><a class="chip" id="s1" target="_blank" rel="noopener">YouTube</a><a class="chip" id="s2" target="_blank" rel="noopener">Spotify</a><a class="chip" id="s3" target="_blank" rel="noopener">SoundCloud</a></div>
+<button class="btn" id="gb" style="width:100%" onclick="gen()">Generate presets</button><div id="gst" class="nt" style="margin:6px 0 0;min-height:14px"></div></div>
+<div class="chain" id="chain"></div>
+<div class="panel" style="position:relative"><div id="dd"></div><div class="ph"><h2 id="mt"></h2><button class="sw" id="tg"></button><div class="sel2" id="ms" style="display:none"><button onclick="mdl(-1)">‹</button><button id="mn" onclick="tdd()" style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></button><button onclick="mdl(1)">›</button></div></div><div class="knobs" id="knobs"></div></div>
+<div class="row"><button class="btn g" style="background:var(--card2);color:var(--tx)" onclick="openF()">Buka file</button><button class="btn" onclick="save()">Simpan ke ponsel (.prst)</button><input type="file" id="pf" accept=".prst" style="display:none"></div>
+<div id="msg"></div></div>
+<div id="v2" style="display:none"><div class="list" id="effs"></div></div>
+<div id="v3" style="display:none"><div class="list" id="store"></div></div>
+<nav><button class="a" onclick="tab(1,this)">▦<br>Preset</button><button onclick="tab(2,this)">☷<br>Effects</button><button onclick="tab(3,this)">🛒<br>Store</button></nav>
+
+
+<div class="ov" id="okey"><div class="dlg" style="max-width:460px;max-height:92vh;overflow:auto"><div class="ar" style="justify-content:space-between;margin-bottom:12px"><h3 style="margin:0">① Hubungkan AI</h3><button class="ico" onclick="closeO()">✕</button></div>
+<div class="g2"><div><label>Provider</label><select id="kp" onchange="kui()"><option value="gemini">Google Gemini</option><option value="claude">AI bawaan claude.ai (tanpa key)</option></select></div><div><label>Model</label><select id="km"></select></div></div>
+<button class="chip" id="kr" onclick="refm()" style="margin:10px 0 12px">Segarkan daftar</button>
+<div id="kg"><ol><li>Buka <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--ac)">Google AI Studio</a> dan masuk dengan akun Google.</li><li>Pilih “Create API key”.</li><li>Salin key lalu tempel di kolom di bawah.</li></ol>
+<label>API key</label><div class="kf"><input id="ki" type="password" placeholder="Tempel API key" autocomplete="off"><button class="chip" id="ks" onclick="shw()">Tampilkan</button><a class="chip" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Dapatkan key</a></div>
+<label class="ck"><input type="checkbox" id="kk" checked><span>Ingat key di perangkat ini (hilangkan centang di perangkat bersama)</span></label>
+<p class="nt">Key hanya disimpan di browser ini dan dikirim langsung ke provider yang dipilih, tanpa server perantara. Setiap provider punya aturan datanya sendiri.</p>
+<div id="ke" class="nt" style="color:#ff6b6b"></div></div>
+<div class="g2"><button class="btn" onclick="saveKey()">OK</button><button class="btn g" style="background:var(--card2)" onclick="noAI()">Lanjut tanpa key</button></div>
+<p class="nt" style="margin:12px 0 0">Tanpa key, AI Tone Generator tetap jalan memakai AI bawaan claude.ai. Key bisa ditambahkan nanti lewat tombol ⚙.</p></div></div>
+<script>
+var M=[
+{id:'NR',c:'#9aa0a6',p:['THRE','ATTACK','RELEASE'],models:['Smart Noise Gate']},
+{id:'PRE',c:'#4fc3f7',p:['SUSTN/THRE','ATTACK','VOLUME','TONE'],models:['S-Comp','Keeley C4','Dyna Comp','Limiter','Micro Boost','Xotic AC Preamp','Xotic RC Preamp','Xotic BB Preamp','Fortin Grind','Acoustic Sim','Pickup Modeler','Touch Wah','Step Filter']},
+{id:'WAH',c:'#66d97a',p:['POSITION','RANGE','PITCH','MIX'],models:['CryBaby','Vox V847','Petrucci Wah','Octaver','Detune','Pitch Bend','Harmonizer']},
+{id:'DST',c:'#ffb03b',p:['GAIN','TONE','VOLUME'],models:['Green OD (TS808)','OD 9 (TS9)','Yellow OD (SD-1)','Penesas (Klon)','Force (OCD)','TaiChi (Zendrive)','Darktale (RAT)','Chief (Guv\'nor)','Plustortion (Dist+)','Lazaro (Big Muff)','Red Haze (Fuzz Face)','Black Bass (B7K)','Bass Hammer']},
+{id:'SNAP',c:'#b388ff',p:['INPUT GAIN','VOLUME','BASS','MIDDLE','TREBLE'],models:['EVH 5150 III','Revv Generator 120','Victory Kraken','King of Tone','User NAM 1']},
+{id:'AMP',c:'#ff8a5c',p:['GAIN','BASS','MID','TREBLE','PRESENCE','MASTER'],models:['Fender Tweed Deluxe','Fender 65 Twin Reverb','Vox AC30','Matchless Chieftain','Roland JC-120','Marshall JCM800','Marshall JCM900','Mesa Dual Rectifier','Mesa Mark IV','Peavey 5150','Friedman BE-50','Bogner','Soldano','Diezel VH4','Ampeg SVT (Bass)','Fender Bassman (Bass)','Acoustic Preamp']},
+{id:'CAB',c:'#ffd24a',p:['MIC POSITION','LOW CUT','HIGH CUT','LEVEL'],models:['1x10','1x12','2x12','4x12 Marshall V30','4x12 Mesa V30','User IR 1']},
+{id:'EQ',c:'#dfe3e8',p:['LOW','MID','HIGH','Q','LOW CUT','HIGH CUT','LEVEL'],models:['Guitar EQ 5-band','Guitar EQ 7-band','Bass EQ','Parametric EQ','HPF / LPF']},
+{id:'MOD',c:'#4dd0e1',p:['RATE','DEPTH','TONE','MIX'],models:['Analog Chorus','Stereo Chorus','Flanger','Phase 90','Tremolo','Vibrato','Rotary Speaker','Uni-Vibe','Bit Smash']},
+{id:'DLY',c:'#80cbc4',p:['TIME','FEEDBACK','TONE','MIX'],models:['Digital Delay','Analog Delay','Tape Delay','Ping Pong','Reverse','Dual Delay']},
+{id:'RVB',c:'#c58bff',p:['DECAY','PRE-DELAY','TONE','MIX'],models:['Room','Hall','Church','Plate','Spring','Shimmer','Cloud/Space']},
+{id:'VOL',c:'#ff6b6b',p:['MIN VOLUME','MAX VOLUME'],models:['Linear','Logarithmic']}];
+var S=M.map(function(m){return{on:true,mi:0,v:m.p.map(function(){return 50})}});
+S[5].v=[65,63,23,32,45,55];S[3].on=false;S[2].on=false;S[8].on=false;
+var sel=5;
+function $(i){return document.getElementById(i)}
+function msg(t){$('msg').textContent=t}
+function rc(){var h='';M.forEach(function(m,i){var s=S[i];h+='<button class="mod'+(s.on?' on':'')+(i==sel?' sel':'')+'" style="--c:'+m.c+'" onclick="pick('+i+')"><i></i><b>'+m.id+'</b>'+m.models[s.mi].slice(0,8)+'</button>'});$('chain').innerHTML=h}
+function arc(v){var r=28,c=2*Math.PI*r,sw=.75*c;return '<svg viewBox="0 0 70 70"><circle cx="35" cy="35" r="'+r+'" fill="none" stroke="var(--ln)" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+sw+' '+c+'" transform="rotate(135 35 35)"/><circle cx="35" cy="35" r="'+r+'" fill="none" stroke="var(--ac)" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+(sw*v/100)+' '+c+'" transform="rotate(135 35 35)"/><line x1="35" y1="35" x2="35" y2="17" stroke="var(--tx)" stroke-width="3" stroke-linecap="round" transform="rotate('+(-135+2.7*v)+' 35 35)"/></svg>'}
+function rp(){var m=M[sel],s=S[sel];$('mt').textContent=m.id;$('tg').textContent=s.on?'ON':'OFF';$('tg').style.color=s.on?'var(--ac)':'var(--mut)';
+$('ms').style.display='flex';$('mn').textContent=m.models[s.mi]+' ▾';
+var h='';m.p.forEach(function(p,i){h+='<div class="k" data-i="'+i+'">'+arc(s.v[i])+'<div>'+p+'</div><div class="v">'+Math.round(s.v[i])+'%</div></div>'});$('knobs').innerHTML=h}
+function all(){rc();rp()}
+function pick(i){sel=i;$('dd').style.display='none';all()}
+$('tg').onclick=function(){S[sel].on=!S[sel].on;all()};
+function mdl(d){var m=M[sel],n=m.models.length;S[sel].mi=(S[sel].mi+d+n)%n;all()}
+var drag=null;
+$('knobs').addEventListener('pointerdown',function(e){var k=e.target.closest('.k');if(!k)return;drag={i:+k.dataset.i,y:e.clientY,v:S[sel].v[+k.dataset.i]};k.setPointerCapture(e.pointerId)});
+$('knobs').addEventListener('pointermove',function(e){if(!drag)return;S[sel].v[drag.i]=Math.max(0,Math.min(100,drag.v+(drag.y-e.clientY)*.6));rp()});
+['pointerup','pointercancel'].forEach(function(t){$('knobs').addEventListener(t,function(){drag=null})});
+function tab(n,b){[1,2,3].forEach(function(i){$('v'+i).style.display=i==n?'':'none'});document.querySelectorAll('nav button').forEach(function(x){x.classList.remove('a')});b.classList.add('a')}
+function renderLists(){var h='';M.forEach(function(m,i){h+='<div class="item"><div><b style="color:'+m.c+'">'+m.id+'</b><small>'+m.models.length+' model · '+m.p.join(', ')+'</small></div><button class="sw" onclick="S['+i+'].on=!S['+i+'].on;all();renderLists()">'+(S[i].on?'ON':'OFF')+'</button></div>'});$('effs').innerHTML=h;
+var P=[['Solo Tone - GP180','Lead, high gain'],['Clean Sparkle','Chorus + plate'],['Blues Crunch','Edge of breakup'],['Ambient Pad','Delay + hall']],g='';P.forEach(function(p){g+='<div class="item"><div><b>'+p[0]+'</b><small>'+p[1]+'</small></div><button class="sw">Unduh</button></div>'});$('store').innerHTML=g}
+renderLists();
+var TPL=Uint8Array.from(atob('ETBkBGQAAAAQMFgEABWlJ///DAAQDA8DAwMEECgAAMggMFAAeAAyAAAAAABIeXN0ZXJpYUZ1enoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwMDwDBQABAgMEBgcICQoLAQAAAAAAAAAAAEhCAABIQgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAABgAAyEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAiAAADAACMQgAASEIAAIxCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAYAAMhCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAcwAABwAAIEIAAHBCAABIQgAAgD8AAEhCAACgQgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAdAAAAAAAMQgAAyEEAAHBCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAABAAABoAAAAAAABIQgAAAAAAAAAAAAAAAAAASEIAwNpFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAABgAAyEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAAGAADIQgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAYAAMhCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAABgAAyEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAADAAAGAADIQgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUDAMAAwAAAANAAAA//8AAGAwcAALAAAAAAAAAAAAyEL//wAAAAAAAAAAyEL//wAAAAAAAAAAyEL//wAAAAAAAAAAyEL//wAAAAAAAAAAyEL//wAAAAAAAAAAyEL//wAAAAAAAAAAyEL//wAAAAAAAAAAyEL//wAAAAAAAAAAyEIAAAAAcDAEAAAAAACAMCQAdQgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),function(c){return c.charCodeAt(0)}),tpl=TPL.slice();
+var FI=[1,2,3,4,5,0,6,7,8,9,10,11],PH=0x06000003,NRC=0x1d,DSC=0x03000022;
+function build(){var b=tpl.slice(),dv=new DataView(b.buffer),nm=($('pn').textContent||'Preset').replace(/[^\x20-\x7e]/g,'?').slice(0,16);
+for(var i=0x2c;i<0x74;i++)b[i]=0;for(i=0;i<nm.length;i++)b[0x2c+i]=nm.charCodeAt(i);
+var ok=[],sk=[];
+for(var f=0;f<12;f++){var o=0x84+68*f,m=M[FI[f]],s=S[FI[f]],code=dv.getUint32(o+4,true);
+if(code===PH&&f!==11){if(s.on)sk.push(m.id);continue}
+dv.setUint32(o,s.on?1:0,true);ok.push(m.id);
+if(code===NRC||code===DSC)for(var k=0;k<3;k++)dv.setFloat32(o+8+4*k,Math.round(s.v[k]),true)}
+return{bytes:b,name:nm,ok:ok,skip:sk}}
+function crc32(u){var t=crc32.t,c,n,k;if(!t){t=crc32.t=[];for(n=0;n<256;n++){c=n;for(k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}}var r=-1;for(n=0;n<u.length;n++)r=(r>>>8)^t[(r^u[n])&255];return(r^-1)>>>0}
+function zip(fn,u){var nb=new TextEncoder().encode(fn),crc=crc32(u),n=u.length,C=46+nb.length,out=new Uint8Array(30+nb.length+n+C+22),v=new DataView(out.buffer),p=0;
+function w4(x){v.setUint32(p,x,true);p+=4}function w2(x){v.setUint16(p,x,true);p+=2}
+w4(0x04034b50);w2(20);w2(0);w2(0);w2(0);w2(0x21);w4(crc);w4(n);w4(n);w2(nb.length);w2(0);out.set(nb,p);p+=nb.length;out.set(u,p);p+=n;
+var cd=p;w4(0x02014b50);w2(20);w2(20);w2(0);w2(0);w2(0);w2(0x21);w4(crc);w4(n);w4(n);w2(nb.length);w2(0);w2(0);w2(0);w2(0);w4(0);w4(0);out.set(nb,p);p+=nb.length;
+w4(0x06054b50);w2(0);w2(0);w2(1);w2(1);w4(C);w4(cd);w2(0);return out}
+async function save(){
+var r=build(),fn=(r.name.replace(/[\\\/:*?"<>|]+/g,'').trim()||'preset')+'.prst',note=' Ditulis: '+r.ok.join(', ')+'.'+(r.skip.length?' Dilewati (model belum dikenal): '+r.skip.join(', ')+'.':'');
+try{
+var d=window.claude&&await claude.use('downloads');
+if(d){
+try{await d.save({filename:fn,data:r.bytes});msg(fn+' disimpan ke ponsel.'+note);return}
+catch(e){if(e&&e.code==='rejected_extension'){await d.save({filename:fn+'.zip',data:zip(fn,r.bytes)});msg(fn+'.zip disimpan. Ekstrak dulu di ponsel (Files > ketuk file zip) untuk mendapat '+fn+'.'+note);return}throw e}}
+var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([r.bytes],{type:'application/octet-stream'}));a.download=fn;document.body.appendChild(a);a.click();a.remove();msg(fn+' dibuat. Cek folder Download di ponsel.'+note)
+}catch(e){msg(e&&e.code==='declined'?'Penyimpanan dibatalkan.':'Gagal menyimpan file.')}}
+function openF(){$('pf').click()}
+$('pf').onchange=function(){var f=this.files[0],inp=this;if(!f)return;var r=new FileReader();
+r.onload=function(){try{var b=new Uint8Array(r.result),dv=new DataView(b.buffer);
+if(b.length<0x3b4||dv.getUint16(0,true)!==0x3011||dv.getUint16(0x74,true)!==0x3030)throw 0;
+tpl=b.slice();var nm='';for(var i=0x2c;i<0x74&&b[i];i++)nm+=String.fromCharCode(b[i]);
+if(nm)$('pn').textContent=nm;
+for(var q=0;q<12;q++){var o=0x84+68*q,s=S[FI[q]],code=dv.getUint32(o+4,true);s.on=dv.getUint32(o,true)===1;
+if(code===NRC||code===DSC)for(var k=0;k<3;k++){s.v[k]=Math.max(0,Math.min(100,dv.getFloat32(o+8+4*k,true)))}}
+all();renderLists();msg('Preset asli dibuka: '+(nm||f.name)+'. Bagian file yang belum dipahami dipertahankan saat disimpan.')}catch(e){msg('File ini bukan .prst GP-180 yang saya kenali.')}inp.value=''};r.readAsArrayBuffer(f)};
+
+function closeO(){$('okey').classList.remove('s')}
+var GM=['gemini-2.5-flash','gemini-2.5-pro','gemini-2.0-flash'],mem={k:''};
+function ls(k){try{return localStorage.getItem(k)||''}catch(e){return ''}}
+function lset(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function getKey(){return mem.k||ls('gk')}
+function fillM(l,c){var h='';l.forEach(function(m){h+='<option'+(m==c?' selected':'')+'>'+m+'</option>'});$('km').innerHTML=h}
+function kui(){var g=$('kp').value=='gemini';$('kg').style.display=g?'':'none';$('km').disabled=!g;$('kr').disabled=!g}
+function openKey(){$('kp').value=ls('gp')||'gemini';$('ki').value=getKey();$('kk').checked=ls('gr')!=='0';$('ke').textContent='';$('kr').textContent='Segarkan daftar';
+var m=ls('gm')||GM[0],l=GM.slice();if(l.indexOf(m)<0)l.unshift(m);fillM(l,m);kui();$('okey').classList.add('s')}
+function shw(){var i=$('ki'),h=i.type=='password';i.type=h?'text':'password';$('ks').textContent=h?'Sembunyikan':'Tampilkan'}
+async function refm(){var k=$('ki').value.trim();if(!k){$('ke').textContent='Isi API key dulu (langkah 1).';return}
+$('ke').textContent='';
+try{var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key='+encodeURIComponent(k));var d=await r.json();
+var l=d.models.filter(function(m){return(m.supportedGenerationMethods||[]).indexOf('generateContent')>-1}).map(function(m){return m.name.replace('models/','')}).filter(function(n){return/gemini/.test(n)});
+if(!l.length)throw 0;fillM(l,l.indexOf($('km').value)>-1?$('km').value:l[0]);$('kr').textContent='Daftar diperbarui'}
+catch(e){$('kr').textContent='Gagal memuat daftar';$('ke').textContent='Koneksi ke Google diblokir di halaman ini atau key tidak valid. Daftar bawaan tetap bisa dipakai.'}}
+function saveKey(){var g=$('kp').value=='gemini',k=$('ki').value.trim();
+if(g&&!k){$('ke').textContent='Isi API key dulu (langkah 1), atau pilih Lanjut tanpa key.';return}
+lset('gp',$('kp').value);lset('gm',$('km').value);lset('gr',$('kk').checked?'1':'0');
+if(g){mem.k=k;lset('gk',$('kk').checked?k:'')}
+closeO();msg(g?'Terhubung ke Gemini ('+$('km').value+').':'Memakai AI bawaan claude.ai.')}
+function noAI(){lset('gp','claude');mem.k='';lset('gk','');closeO();msg('Lanjut tanpa key: memakai AI bawaan claude.ai.')}
+var inst='gitar';
+function setI(v){inst=v;[['ig','gitar'],['ib','bass']].forEach(function(x){var e=$(x[0]),on=v===x[1];e.style.background=on?'var(--ac)':'var(--card2)';e.style.color=on?'#1b1109':'var(--tx)'})}
+function ex(b){var p=b.dataset.v.split('|');$('ab').value=p[0];$('at').value=p[1];lnk()}
+function gmsg(t){$('gst').textContent=t}
+function src(t){var m=t.match(/https?:\/\/\S+/);if(!m)return null;var u=m[0],k=/youtu\.?be/.test(u)?'youtube':/spotify\.com/.test(u)?'spotify':/soundcloud\.com/.test(u)?'soundcloud':null;return k?{k:k,u:u}:null}
+function lnk(){var q=encodeURIComponent(($('ab').value+' '+$('at').value).trim());
+$('s1').href='https://www.youtube.com/results?search_query='+q;$('s2').href='https://open.spotify.com/search/'+q;$('s3').href='https://soundcloud.com/search?q='+q}
+async function ttl(s){var o={youtube:'https://www.youtube.com/oembed?format=json&url=',spotify:'https://open.spotify.com/oembed?url=',soundcloud:'https://soundcloud.com/oembed?format=json&url='}[s.k];try{var r=await fetch(o+encodeURIComponent(s.u));var d=await r.json();return d.title||''}catch(e){return ''}}
+async function gen(){
+var band=$('ab').value.trim(),ttlr=$('at').value.trim(),link=$('al').value.trim();
+if(!(band&&ttlr)&&!link){gmsg('Isi nama band dan judul lagu dulu.');return}
+var b=$('gb');b.textContent='Membuat preset...';b.disabled=true;
+var s=src(link),txt=(band&&ttlr)?band+' - '+ttlr:(band||ttlr);
+if(s&&!txt)txt=await ttl(s);
+var ids=M.map(function(m){return m.id+':'+m.p.length+'['+m.models.join('|')+']'}).join(', ');
+var prompt='Kamu ahli tone '+(inst==='bass'?'bass':'gitar')+'. Buat preset pedal Valeton GP180 untuk '+(inst==='bass'?'BASS':'GITAR')+' pada lagu (band - judul): "'+(txt||'lagu pada video terlampir')+'". '+(inst==='bass'?'Pakai model bass (Ampeg SVT (Bass), Fender Bassman (Bass), Bass EQ, Black Bass, Bass Hammer) dan hindari amp gitar. ':'')+'Balas HANYA JSON: {"name":string,"on":[id modul aktif],"vals":{"ID":[angka 0-100 sesuai jumlah parameter]},"models":{"ID":"nama model persis dari daftar"}}. Format modul:jumlah parameter[daftar model]: '+ids;
+var j=null,via='',key=ls('gp')==='claude'?'':getKey(),gmod=ls('gm')||GM[0];
+if(key){try{
+var parts=[{text:prompt}];if(s&&s.k==='youtube')parts.unshift({fileData:{fileUri:s.u}});
+var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(gmod)+':generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:parts}],generationConfig:{responseMimeType:'application/json'}})});
+var d=await r.json();j=JSON.parse(d.candidates[0].content.parts[0].text.replace(/```json|```/g,'').trim());via='Gemini '+gmod}catch(e){j=null}}
+if(!j&&txt){try{var sm=window.claude&&await claude.use('sample');if(sm){j=await sm.json(prompt);via=key?'Claude (Gemini tidak terjangkau dari halaman ini)':'Claude'}}catch(e){j=null}}
+if(j){try{M.forEach(function(m,i){S[i].on=(j.on||[]).indexOf(m.id)>-1;
+if(j.models&&j.models[m.id]){var ix=m.models.indexOf(j.models[m.id]);if(ix>-1)S[i].mi=ix}
+var v=j.vals&&j.vals[m.id];if(v)S[i].v=m.p.map(function(_,k){return Math.max(0,Math.min(100,+v[k]||0))})});
+if(j.name)$('pn').textContent=j.name;all();renderLists();gmsg('Preset dibuat oleh '+via+'.')}catch(e){gmsg('Format jawaban AI tidak sesuai, coba lagi.')}}
+else{gmsg(!txt?'Judul dari tautan tidak bisa diambil di sini. Tulis judul lagu + artis, atau pakai Gemini API Key di versi APK.':'AI tidak tersedia atau izin ditolak.')}
+b.textContent='Generate presets';b.disabled=false}
+
+var dev=null;
+function bts(t,on){var b=$('bt');b.textContent=(on?'● ':'○ ')+t;b.style.color=on?'#66d97a':'var(--mut)'}
+async function btc(){
+if(dev&&dev.gatt&&dev.gatt.connected){dev.gatt.disconnect();return}
+if(!navigator.bluetooth){msg('Bluetooth web tidak didukung di browser ini. Pakai Chrome di Android.');return}
+var MIDI='03b80e5a-ede8-4b33-a751-6ce34ec4c700';
+try{
+bts('Mencari...',false);
+dev=await navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:[MIDI]});
+dev.addEventListener('gattserverdisconnected',function(){bts('Bluetooth',false);msg('Pedal terputus.')});
+var srv=await dev.gatt.connect(),has=true;
+try{await srv.getPrimaryService(MIDI)}catch(e){has=false}
+var nm=dev.name||'perangkat';bts(nm.slice(0,10),true);
+msg(has?'Terhubung ke '+nm+' (BLE MIDI terdeteksi). Pengiriman preset ke pedal belum aktif.':'Terhubung ke '+nm+', tetapi layanan BLE MIDI tidak ditemukan.')
+}catch(e){bts('Bluetooth',false);
+var t=(e&&e.message)||'';
+msg(e&&e.name==='NotFoundError'?'Pemilihan perangkat dibatalkan.':(e&&e.name==='SecurityError')||/permissions policy|disallowed|not allowed/i.test(t)?'Bluetooth diblokir di halaman ini. Buka lewat hosting sendiri atau APK.':'Gagal terhubung: '+(t||e))}}
+var mi=null,mo=null;
+function usbs(t,on){var b=$('usb');b.textContent=(on?'● ':'○ ')+t;b.style.color=on?'#66d97a':'var(--mut)'}
+async function usbc(){
+if(mi){mi.onstatechange=null;mi=null;mo=null;usbs('USB',false);msg('USB diputus.');return}
+if(!navigator.requestMIDIAccess){msg('USB MIDI tidak didukung di browser ini. Pakai Chrome di Android (kabel OTG) atau di komputer.');return}
+try{
+usbs('Mencari...',false);
+mi=await navigator.requestMIDIAccess({sysex:true});
+var ps=[];mi.outputs.forEach(function(p){ps.push(p)});
+var hit=ps.filter(function(p){return /gp|valeton/i.test(p.name||'')});
+mo=hit[0]||ps[0];
+if(!mo){mi.onstatechange=null;mi=null;usbs('USB',false);msg('Izin diberikan, tetapi tidak ada perangkat MIDI. Sambungkan pedal dengan kabel USB (pakai OTG di ponsel), lalu coba lagi.');return}
+var nm=mo.name||'perangkat';usbs(nm.slice(0,10),true);
+msg('Terhubung lewat USB ke '+nm+'. Pengiriman preset ke pedal belum aktif.');
+mi.onstatechange=function(ev){if(mo&&ev.port.id===mo.id&&ev.port.state==='disconnected'){mi.onstatechange=null;mi=null;mo=null;usbs('USB',false);msg('Kabel USB terlepas.')}}
+}catch(e){mi=null;mo=null;usbs('USB',false);var t=(e&&e.message)||'';
+msg(/permission|policy|denied|not allowed|security/i.test(((e&&e.name)||'')+t)?'USB MIDI diblokir di halaman ini. Buka lewat hosting sendiri atau APK.':'Gagal terhubung USB: '+(t||e))}}
+function tdd(){var d=$('dd');if(d.style.display==='block'){d.style.display='none';return}var m=M[sel],h='';m.models.forEach(function(n,i){h+='<button class="'+(i===S[sel].mi?'cur':'')+'" onclick="pm('+i+')">'+n+'</button>'});d.innerHTML=h;d.style.display='block';var c=d.querySelector('.cur');if(c)d.scrollTop=c.offsetTop-40}
+function pm(i){S[sel].mi=i;$('dd').style.display='none';all()}
+document.addEventListener('click',function(e){var d=$('dd');if(d.style.display==='block'&&!e.target.closest('#dd')&&!e.target.closest('#mn'))d.style.display='none'});
+setI('gitar');lnk();
+all();
+</script></body></html>
